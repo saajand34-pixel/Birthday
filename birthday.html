@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday System.Deploy()</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #121212;
+            --gold: #f4c45e;
+            --cake-body: #4a3728;
+            --frosting: #ffffff;
+            --flame: #ff5f56;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* --- STAGE 1: THE CAKE --- */
+        #cake-stage {
+            text-align: center;
+            transition: transform 1s ease-in-out;
+            cursor: pointer;
+        }
+
+        .cake {
+            position: relative;
+            width: 200px;
+            height: 120px;
+            background: var(--cake-body);
+            border-radius: 10px 10px 0 0;
+            margin: 0 auto;
+            box-shadow: inset 0 10px 0 var(--frosting);
+        }
+
+        .candle {
+            position: absolute;
+            width: 12px;
+            height: 50px;
+            background: repeating-linear-gradient(45deg, #fff, #fff 5px, var(--gold) 5px, var(--gold) 10px);
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .flame {
+            position: absolute;
+            width: 15px;
+            height: 25px;
+            background: var(--flame);
+            border-radius: 50% 50% 20% 20%;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px var(--flame);
+            opacity: 0; /* Hidden initially */
+            transition: opacity 0.5s ease;
+        }
+
+        .instruction {
+            margin-top: 30px;
+            color: var(--gold);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            animation: blink 1.5s infinite;
+        }
+
+        /* --- STAGE 2: THE MESSAGE (Hidden) --- */
+        #message-stage {
+            position: absolute;
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .dev-card {
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid var(--gold);
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .dev-card p {
+            font-family: 'Fira Code', monospace;
+            line-height: 1.8;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .active-flame { opacity: 1 !important; animation: flicker 0.1s infinite; }
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        .stage-transition {
+            opacity: 0 !important;
+            transform: translateY(-100px) scale(0) !important;
+        }
+
+        .reveal-message {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+            pointer-events: all !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cake-stage" onclick="lightCandle()">
+        <div class="candle">
+            <div id="flame" class="flame"></div>
+        </div>
+        <div class="cake"></div>
+        <p class="instruction">>click here</p>
+    </div>
+
+    <div id="message-stage">
+        <h1 class="main-title">Birthday!</h1>
+        <div class="dev-card">
+            <p>
+                <span style="color: #569cd6;">// Happy Birthday Akka</span><br>
+                To my sister, Happy Birthday to my sister. I’ve spent a lot of time thinking about the misunderstanding that came between us, and I want you to know how much I truly regret it. I’m sorry for the distance and the silence. You’ve always been someone I looked up to, both as a sister and a developer. I hope this year brings you as much happiness as you deserve, and I hope we can find a way to leave the past behind us Wishing you a year of successful happiness.<br><br>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        function lightCandle() {
+            // 1. Light the flame
+            document.getElementById('flame').classList.add('active-flame');
+            
+            // 2. Wait a second, then trigger celebration
+            setTimeout(() => {
+                confetti({
+                    particleCount: 200,
+                    spread: 90,
+                    origin: { y: 0.6 },
+                    colors: ['#f4c45e', '#ffffff', '#ff5f56']
+                });
+
+                // 3. Transition to Message
+                document.getElementById('cake-stage').classList.add('stage-transition');
+                
+                setTimeout(() => {
+                    document.getElementById('cake-stage').style.display = 'none';
+                    document.getElementById('message-stage').classList.add('reveal-message');
+                }, 800);
+
+            }, 800);
+        }
+    </script>
+</body>
+</html>
